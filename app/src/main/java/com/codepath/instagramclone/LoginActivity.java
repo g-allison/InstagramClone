@@ -15,12 +15,16 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
+
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;
+    private Button btnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,22 @@ public class LoginActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        if (ParseUser.getCurrentUser() != null) {
+        // if recently created user, doesn't skip to main activity
+        String name = "";
+        try {
+            name = getIntent().getStringExtra("new account");
+            if (name != null) {
+                // tells user that an account has been made
+                Toast.makeText(this, "account created!", Toast.LENGTH_LONG).show();
+            }
+            Log.i(TAG, "onCreate try: recentlyCreated status " + name);
+
+        } catch (Exception e){
+            Log.i(TAG, "onCreate catch: recentlyCreated status " + name);
+        }
+
+
+        if (ParseUser.getCurrentUser() != null && name == null) {
             goMainActivity();
         }
 
@@ -46,6 +65,21 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(username, password);
             }
         });
+        btnSignUp = binding.btnSignUp;
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick sign up button");
+                signUpUser();
+            }
+        });
+
+    }
+
+    private void signUpUser() {
+        Intent i = new Intent(this, SignUpActivity.class);
+        startActivity(i);
+        finish();
 
     }
 
