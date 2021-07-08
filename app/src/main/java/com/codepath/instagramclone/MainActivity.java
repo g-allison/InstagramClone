@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnCaptureImage;
     private ImageView ivPostImage;
     private Button btnSubmit;
+    private Button btnFeedNavigate;
     private File photoFile;
     private String photoFileName = "photo.jpg";
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         btnCaptureImage = binding.btnCaptureImage;
         ivPostImage = binding.ivPostImage;
         btnSubmit = binding.btnSubmit;
+        btnFeedNavigate = binding.btnFeedNavigate;
 
         btnCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,8 +65,16 @@ public class MainActivity extends AppCompatActivity {
                 launchCamera();
             }
         });
+
+        btnFeedNavigate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FeedActivity.class);
+                startActivity(intent);
+
+            }
+        });
         
-//        queryPosts();
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 savePost(description, currentUser, photoFile);
             }
         });
+        queryPosts();
 
 
     }
