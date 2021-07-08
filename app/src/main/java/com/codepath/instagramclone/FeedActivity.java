@@ -3,6 +3,7 @@ package com.codepath.instagramclone;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,24 @@ public class FeedActivity extends AppCompatActivity {
         setContentView(view);
 
         rvPosts = binding.rvPosts;
+
+
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // clearing out old items before appending in the new ones
+                adapter.clear();
+                // ...the data has come back, add new items to your adapter...
+                queryPosts();
+                // Now we call setRefreshing(false) to signal refresh has finished
+                binding.swipeContainer.setRefreshing(false);
+            }
+        });
+        // Configure the refreshing colors
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         // initialize the array that will hold posts and create a PostsAdapter
         allPosts = new ArrayList<>();
