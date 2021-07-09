@@ -21,8 +21,10 @@ public class PostActivity extends AppCompatActivity {
 
     private TextView tvUsername;
     private TextView tvDescription;
-    private ImageView ivImage;
     private TextView tvCreatedAt;
+    private ImageView ivImage;
+    private ImageView ivProfileImage;
+
     private Post post;
 
     @Override
@@ -36,11 +38,12 @@ public class PostActivity extends AppCompatActivity {
         post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
         tvUsername = binding.tvUsername;
-        ivImage = binding.ivImage;
         tvDescription = binding.tvDescription;
         tvCreatedAt = binding.tvCreatedAt;
+        ivImage = binding.ivImage;
+        ivProfileImage = binding.ivProfileImage;
 
-        tvUsername.setText(post.getUser().getUsername());
+        tvUsername.setText("@" + post.getUser().getUsername());
         tvDescription.setText(post.getDescription());
 
         TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
@@ -50,5 +53,10 @@ public class PostActivity extends AppCompatActivity {
                 .load(post.getImage().getUrl())
                 .centerCrop()
                 .into(ivImage);
+
+        Glide.with(this)
+                .load(post.getProfile().getUrl())
+                .circleCrop()
+                .into(ivProfileImage);
     }
 }

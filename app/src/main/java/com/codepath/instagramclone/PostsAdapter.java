@@ -70,6 +70,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage = itemView.findViewById(R.id.ivImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
 
             itemView.setOnClickListener(this);
             this.onPostListener = onPostListener;
@@ -78,13 +79,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public void bind(Post post) {
             // Bind the post data to the view elements
             tvDescription.setText(post.getDescription());
-            tvUsername.setText(post.getUser().getUsername());
+            tvUsername.setText("@" + post.getUser().getUsername());
 
             TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
             tvCreatedAt.setText(timeAgo.calculateTimeAgo());
 
             ParseFile image = post.getImage();
             Glide.with(context).load(image.getUrl()).into(ivImage);
+
+            Glide.with(context)
+                    .load(post.getProfile().getUrl())
+                    .circleCrop()
+                    .into(ivProfileImage);
 
         }
 

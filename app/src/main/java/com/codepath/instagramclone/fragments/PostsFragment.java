@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.codepath.instagramclone.MainActivity;
 import com.codepath.instagramclone.Post;
 import com.codepath.instagramclone.PostActivity;
 import com.codepath.instagramclone.PostsAdapter;
@@ -113,10 +114,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.OnPostListen
 
     @Override
     public void onPostClick(int position) {
-        Log.d(TAG, "onTweetClick: clicked");
-        Intent intent = new Intent(getContext(), PostActivity.class);
-        intent.putExtra("post", Parcels.wrap(allPosts.get(position)));
-        startActivity(intent);
-        Log.d(TAG, "startActivity");
+        ((MainActivity)getActivity()).profileTransition(position);
+
     }
 }

@@ -28,6 +28,7 @@ import com.codepath.instagramclone.databinding.ActivityMainBinding;
 import com.codepath.instagramclone.fragments.ComposeFragment;
 import com.codepath.instagramclone.fragments.PostsFragment;
 import com.codepath.instagramclone.fragments.ProfileFragment;
+import com.codepath.instagramclone.fragments.UserProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
@@ -89,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
+    public void profileTransition(int position) {
+        fragmentManager.beginTransaction().replace(R.id.flContainer, new UserProfileFragment(position)).commit();
+        bottomNavigationView.setSelectedItemId(R.id.action_profile);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,5 +113,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
