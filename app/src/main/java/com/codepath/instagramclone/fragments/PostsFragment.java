@@ -25,6 +25,7 @@ import com.codepath.instagramclone.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -113,8 +114,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.OnPostListen
     }
 
     @Override
-    public void onPostClick(int position) {
-        ((MainActivity)getActivity()).profileTransition(position);
-
+    public void onPostClick(ParseUser user) {
+        ((MainActivity)getActivity()).profileTransition(user);
     }
 }

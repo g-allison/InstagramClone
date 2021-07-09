@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -54,13 +56,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return posts;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvUsername;
         private TextView tvDescription;
         private TextView tvCreatedAt;
         private ImageView ivProfileImage;
         private ImageView ivImage;
+        private RelativeLayout rlContainer;
 
         OnPostListener onPostListener;
 
@@ -71,12 +74,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
-
-            itemView.setOnClickListener(this);
+            rlContainer = itemView.findViewById(R.id.rlContainer);
             this.onPostListener = onPostListener;
         }
 
         public void bind(Post post) {
+            rlContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onPostListener.onPostClick(post.getUser());
+
+                }
+            });
+
             // Bind the post data to the view elements
             tvDescription.setText(post.getDescription());
             tvUsername.setText("@" + post.getUser().getUsername());
@@ -93,14 +103,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     .into(ivProfileImage);
 
         }
-
-        @Override
-        public void onClick(View v) {
-            onPostListener.onPostClick(getAdapterPosition());
-        }
     }
 
     public interface OnPostListener{
-        void onPostClick(int position);
+        void onPostClick(ParseUser user);
     }
 }

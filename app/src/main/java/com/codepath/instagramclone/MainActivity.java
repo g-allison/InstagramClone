@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
-    public void profileTransition(int position) {
-        fragmentManager.beginTransaction().replace(R.id.flContainer, new UserProfileFragment(position)).commit();
-        bottomNavigationView.setSelectedItemId(R.id.action_profile);
+    public void profileTransition(ParseUser user) {
+        fragmentManager.beginTransaction().replace(R.id.flContainer, new UserProfileFragment(user)).commit();
+//        bottomNavigationView.setSelectedItemId(R.id.action_profile);
     }
 
 

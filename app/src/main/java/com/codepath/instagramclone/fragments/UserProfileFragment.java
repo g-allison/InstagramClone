@@ -31,30 +31,46 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class UserProfileFragment extends ProfileFragment {
-    private int POSITION;
+    ParseUser user;
     private static final String TAG = "UserProfileFragment";
     private TextView tvUsername;
     private TextView tvName;
-    private RecyclerView rvPosts;
+//    private RecyclerView rvPosts;
 
-    public UserProfileFragment(int POSITION) {
+    public UserProfileFragment() {
         // Required empty public constructor
-        this.POSITION = POSITION;
+    }
+
+    public UserProfileFragment(ParseUser user) {
+        this.user = user;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated: ");
         final int NUM_COLUMNS = 3;
         super.onViewCreated(view, savedInstanceState);
-        rvPosts = view.findViewById(R.id.rvPosts);
+//        rvPosts = view.findViewById(R.id.rvPosts);
 
-        allPosts = new ArrayList<>();
-        adapter = new GridAdapter(getContext(), allPosts, this);
+//        allPosts = new ArrayList<>();
+//        adapter = super.adapter;
 
-        rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new GridLayoutManager(rvPosts.getContext(), NUM_COLUMNS));
+//        rvPosts.setAdapter(adapter);
+//        rvPosts.setLayoutManager(new GridLayoutManager(rvPosts.getContext(), NUM_COLUMNS));
 
-        query(view);
+        tvName = view.findViewById(R.id.tvName);
+        tvUsername = view.findViewById(R.id.tvUsername);
+
+        tvName.setText(user.getString("name"));
+        tvUsername.setText(user.getUsername());
+
+        Log.d(TAG, "Username: " + user.getUsername());
+
+        ivProfileImage = view.findViewById(R.id.ivProfileImage);
+        Glide.with(view.getContext())
+                .load(user.getParseFile("profilePicture").getUrl())
+                .circleCrop()
+                .into(ivProfileImage);
 
     }
 
@@ -64,6 +80,7 @@ public class UserProfileFragment extends ProfileFragment {
         query.include(Post.KEY_USER);
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_KEY);
+        query.whereEqualTo(Post.KEY_USER, user);
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
@@ -78,24 +95,10 @@ public class UserProfileFragment extends ProfileFragment {
                 }
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
-                Post post = allPosts.get(POSITION);
-
-                Log.d(TAG, "done: position " + POSITION);
-                Log.d(TAG, "done: user " + post.getUser().getUsername());
-
-                tvName = view.findViewById(R.id.tvName);
-
-                tvName.setText(post.getName());
-
-                tvUsername = view.findViewById(R.id.tvUsername);
-                tvUsername.setText("@" + post.getUser().getUsername());
-
-                ivProfileImage = view.findViewById(R.id.ivProfileImage);
-                Glide.with(view.getContext())
-                        .load(post.getProfile().getUrl())
-                        .circleCrop()
-                        .into(ivProfileImage);
             }
         });
+
+
+
     }
 }
