@@ -1,10 +1,13 @@
 package com.codepath.instagramclone.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -15,11 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.instagramclone.Post;
+import com.codepath.instagramclone.PostActivity;
 import com.codepath.instagramclone.PostsAdapter;
 import com.codepath.instagramclone.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +33,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PostsFragment extends Fragment {
+public class PostsFragment extends Fragment implements PostsAdapter.OnPostListener {
 
     private static final String TAG = "PostsFragment";
     private RecyclerView rvPosts;
@@ -54,10 +60,12 @@ public class PostsFragment extends Fragment {
         rvPosts = view.findViewById(R.id.rvPosts);
 
         allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), allPosts);
+        adapter = new PostsAdapter(getContext(), allPosts, this);
 
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvPosts.addItemDecoration(new DividerItemDecoration(rvPosts.getContext(), DividerItemDecoration.VERTICAL));
+
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
 
@@ -101,5 +109,14 @@ public class PostsFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onPostClick(int position) {
+        Log.d(TAG, "onTweetClick: clicked");
+        Intent intent = new Intent(getContext(), PostActivity.class);
+        intent.putExtra("post", Parcels.wrap(allPosts.get(position)));
+        startActivity(intent);
+        Log.d(TAG, "startActivity");
     }
 }

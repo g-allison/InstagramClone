@@ -18,17 +18,19 @@ import java.util.List;
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
     private Context context;
     private List<Post> posts;
+    private OnPostListener mOnPostListener;
 
-    public PostsAdapter(Context context, List<Post> posts) {
+    public PostsAdapter(Context context, List<Post> posts, OnPostListener onPostListener) {
         this.context = context;
         this.posts = posts;
+        this.mOnPostListener = onPostListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mOnPostListener);
     }
 
     @Override
@@ -48,17 +50,22 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvUsername;
         private ImageView ivImage;
         private TextView tvDescription;
 
-        public ViewHolder(@NonNull View itemView) {
+        OnPostListener onPostListener;
+
+        public ViewHolder(@NonNull View itemView, OnPostListener onPostListener) {
             super(itemView);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivImage = itemView.findViewById(R.id.ivImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
+
+            itemView.setOnClickListener(this);
+            this.onPostListener = onPostListener;
         }
 
         public void bind(Post post) {
@@ -73,5 +80,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 ivImage.setVisibility(View.GONE);
             }
         }
+
+        @Override
+        public void onClick(View v) {
+            onPostListener.onPostClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnPostListener{
+        void onPostClick(int position);
     }
 }

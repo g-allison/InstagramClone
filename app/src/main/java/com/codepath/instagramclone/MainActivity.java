@@ -84,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
+    public void postTransition() {
+        fragmentManager.beginTransaction().replace(R.id.flContainer, new PostsFragment()).commit();
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,4 +107,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

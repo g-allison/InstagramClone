@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
@@ -87,10 +88,12 @@ public class ComposeFragment extends Fragment {
                     Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (photoFile == null || ivPostImage.getDrawable() == null) {
-                    Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
+
+                if (photoFile == null) {
+                    Toast.makeText(getContext(), "Must upload image", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(description, currentUser, photoFile);
             }
@@ -163,6 +166,7 @@ public class ComposeFragment extends Fragment {
         Post post = new Post();
         post.setDescription(description);
         post.setImage(new ParseFile(photoFile));
+
         post.setUser(currentUser);
         post.saveInBackground(new SaveCallback() {
             @Override
@@ -174,6 +178,7 @@ public class ComposeFragment extends Fragment {
                 Log.i(TAG, "Post save was successful!");
                 etDescription.setText("");
                 ivPostImage.setImageResource(0);
+                ((MainActivity)getActivity()).postTransition();
             }
         });
     }
