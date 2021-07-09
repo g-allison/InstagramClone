@@ -37,6 +37,16 @@
         android:layout_marginTop="20dp"
         tools:srcCompat="@tools:sample/avatars" />
 
+<!--    <Button-->
+<!--        android:id="@+id/btnSubmit"-->
+<!--        android:layout_width="355dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/ivPostImage"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:text="submit" />-->
+
+
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="355dp"
@@ -45,6 +55,4 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:text="submit" />
-
-
 </RelativeLayout>

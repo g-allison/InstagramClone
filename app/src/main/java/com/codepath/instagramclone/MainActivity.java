@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void profileTransition(ParseUser user) {
         fragmentManager.beginTransaction().replace(R.id.flContainer, new UserProfileFragment(user)).commit();
-//        bottomNavigationView.setSelectedItemId(R.id.action_profile);
     }
 
 

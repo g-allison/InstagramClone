@@ -25,11 +25,11 @@
         android:id="@+id/etUsername"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ivLogo"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="username" />
@@ -68,4 +68,20 @@
         android:layout_marginBottom="31dp"
         android:layout_toStartOf="@+id/btnSignUp"
         android:text="Don't have an account?" />
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="10dp"
+        app:srcCompat="@drawable/nav_logo_whiteout" />
+
 </RelativeLayout>

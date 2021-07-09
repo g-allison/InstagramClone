@@ -48,15 +48,8 @@ public class UserProfileFragment extends ProfileFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onViewCreated: ");
-        final int NUM_COLUMNS = 3;
         super.onViewCreated(view, savedInstanceState);
-//        rvPosts = view.findViewById(R.id.rvPosts);
 
-//        allPosts = new ArrayList<>();
-//        adapter = super.adapter;
-
-//        rvPosts.setAdapter(adapter);
-//        rvPosts.setLayoutManager(new GridLayoutManager(rvPosts.getContext(), NUM_COLUMNS));
 
         tvName = view.findViewById(R.id.tvName);
         tvUsername = view.findViewById(R.id.tvUsername);
