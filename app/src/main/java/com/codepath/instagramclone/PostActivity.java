@@ -13,6 +13,8 @@ import com.codepath.instagramclone.databinding.ActivityPostBinding;
 
 import org.parceler.Parcels;
 
+import java.util.Date;
+
 public class PostActivity extends AppCompatActivity {
 
     public static final String TAG = "PostActivity";
@@ -20,6 +22,8 @@ public class PostActivity extends AppCompatActivity {
     private TextView tvUsername;
     private TextView tvDescription;
     private ImageView ivImage;
+    private TextView tvCreatedAt;
+    private Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +33,19 @@ public class PostActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        Post post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("post"));
+        post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
         tvUsername = binding.tvUsername;
         ivImage = binding.ivImage;
         tvDescription = binding.tvDescription;
+        tvCreatedAt = binding.tvCreatedAt;
 
         tvUsername.setText(post.getUser().getUsername());
         tvDescription.setText(post.getDescription());
+
+        TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
+        tvCreatedAt.setText(timeAgo.calculateTimeAgo());
+
         Glide.with(this)
                 .load(post.getImage().getUrl())
                 .centerCrop()

@@ -88,7 +88,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.OnPostListen
         queryPosts();
     }
 
-    protected void queryPosts() {
+    private void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
         query.setLimit(20);

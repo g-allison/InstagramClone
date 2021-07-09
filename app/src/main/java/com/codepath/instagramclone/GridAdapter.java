@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,12 +14,16 @@ import com.parse.ParseFile;
 
 import java.util.List;
 
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+
+
+public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     private Context context;
     private List<Post> posts;
     private OnPostListener mOnPostListener;
+    private LayoutInflater mInflater;
 
-    public PostsAdapter(Context context, List<Post> posts, OnPostListener onPostListener) {
+    public GridAdapter(Context context, List<Post> posts, OnPostListener onPostListener) {
+        this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.posts = posts;
         this.mOnPostListener = onPostListener;
@@ -29,7 +32,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
+        View view = mInflater.inflate(R.layout.item_grid, parent, false);
         return new ViewHolder(view, mOnPostListener);
     }
 
@@ -54,22 +57,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return posts;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvUsername;
-        private TextView tvDescription;
-        private TextView tvCreatedAt;
-        private ImageView ivProfileImage;
-        private ImageView ivImage;
+        private ImageView ivGrid;
 
         OnPostListener onPostListener;
 
         public ViewHolder(@NonNull View itemView, OnPostListener onPostListener) {
             super(itemView);
-            tvUsername = itemView.findViewById(R.id.tvUsername);
-            ivImage = itemView.findViewById(R.id.ivImage);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
+            ivGrid = itemView.findViewById(R.id.ivGrid);
 
             itemView.setOnClickListener(this);
             this.onPostListener = onPostListener;
@@ -77,14 +73,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public void bind(Post post) {
             // Bind the post data to the view elements
-            tvDescription.setText(post.getDescription());
-            tvUsername.setText(post.getUser().getUsername());
-
-            TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
-            tvCreatedAt.setText(timeAgo.calculateTimeAgo());
 
             ParseFile image = post.getImage();
-            Glide.with(context).load(image.getUrl()).into(ivImage);
+            Glide.with(context)
+                    .load(image.getUrl())
+                    .centerCrop()
+                    .into(ivGrid);
 
         }
 
