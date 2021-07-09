@@ -22,6 +22,7 @@ public class PostActivity extends AppCompatActivity {
     private TextView tvUsername;
     private TextView tvDescription;
     private TextView tvCreatedAt;
+    private TextView tvLikeCount;
     private ImageView ivImage;
     private ImageView ivProfileImage;
 
@@ -42,6 +43,9 @@ public class PostActivity extends AppCompatActivity {
         tvCreatedAt = binding.tvCreatedAt;
         ivImage = binding.ivImage;
         ivProfileImage = binding.ivProfileImage;
+        tvLikeCount = binding.tvLikeCount;
+
+        tvLikeCount.setText(((int)(Math.random() * 1000000) + 2) + " likes");
 
         tvUsername.setText("@" + post.getUser().getUsername());
         tvDescription.setText(post.getDescription());

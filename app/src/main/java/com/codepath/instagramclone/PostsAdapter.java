@@ -61,6 +61,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvUsername;
         private TextView tvDescription;
         private TextView tvCreatedAt;
+        private TextView tvLikeCount;
         private ImageView ivProfileImage;
         private ImageView ivImage;
         private RelativeLayout rlContainer;
@@ -74,6 +75,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            tvLikeCount = itemView.findViewById(R.id.tvLikeCount);
             rlContainer = itemView.findViewById(R.id.rlContainer);
             this.onPostListener = onPostListener;
         }
@@ -90,6 +92,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             // Bind the post data to the view elements
             tvDescription.setText(post.getDescription());
             tvUsername.setText("@" + post.getUser().getUsername());
+            tvLikeCount.setText(((int)(Math.random() * 1000000) + 2) + " likes");
+
 
             TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
             tvCreatedAt.setText(timeAgo.calculateTimeAgo());
