@@ -19,72 +19,68 @@ import com.parse.ParseUser;
 import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
-    private Context context;
-    private List<Post> posts;
+    private Context mContext;
+    private List<Post> mPosts;
     private OnPostListener mOnPostListener;
 
-    public PostsAdapter(Context context, List<Post> posts, OnPostListener onPostListener) {
-        this.context = context;
-        this.posts = posts;
+    public PostsAdapter(Context mContext, List<Post> mPosts, OnPostListener onPostListener) {
+        this.mContext = mContext;
+        this.mPosts = mPosts;
         this.mOnPostListener = onPostListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_post, parent, false);
         return new ViewHolder(view, mOnPostListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Post post = posts.get(position);
+        Post post = mPosts.get(position);
         holder.bind(post);
     }
 
     @Override
     public int getItemCount() {
-        return posts.size();
+        return mPosts.size();
     }
 
     // Clean all elements of the recycler
     public void clear() {
-        posts.clear();
+        mPosts.clear();
         notifyDataSetChanged();
-    }
-
-    public List<Post> getPosts() {
-        return posts;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvUsername;
-        private TextView tvDescription;
-        private TextView tvCreatedAt;
-        private TextView tvLikeCount;
-        private ImageView ivProfileImage;
-        private ImageView ivImage;
-        private ImageButton ibLike;
-        private RelativeLayout rlContainer;
+        private TextView mTvUsername;
+        private TextView mTvDescription;
+        private TextView mTvCreatedAt;
+        private TextView mTvLikeCount;
+        private ImageView mIvProfileImage;
+        private ImageView mIvImage;
+        private ImageButton mIbLike;
+        private RelativeLayout mRlContainer;
 
         OnPostListener onPostListener;
 
         public ViewHolder(@NonNull View itemView, OnPostListener onPostListener) {
             super(itemView);
-            tvUsername = itemView.findViewById(R.id.tvUsername);
-            ivImage = itemView.findViewById(R.id.ivImage);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
-            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
-            tvLikeCount = itemView.findViewById(R.id.tvLikeCount);
-            ibLike = itemView.findViewById(R.id.ibLike);
-            rlContainer = itemView.findViewById(R.id.rlContainer);
+            mTvUsername = itemView.findViewById(R.id.tvUsername);
+            mIvImage = itemView.findViewById(R.id.ivImage);
+            mTvDescription = itemView.findViewById(R.id.tvDescription);
+            mTvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
+            mIvProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            mTvLikeCount = itemView.findViewById(R.id.tvLikeCount);
+            mIbLike = itemView.findViewById(R.id.ibLike);
+            mRlContainer = itemView.findViewById(R.id.rlContainer);
             this.onPostListener = onPostListener;
         }
 
         public void bind(Post post) {
-            rlContainer.setOnClickListener(new View.OnClickListener() {
+            mRlContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onPostListener.onPostClick(post.getUser());
@@ -93,29 +89,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             });
 
             // Bind the post data to the view elements
-            tvDescription.setText(post.getDescription());
-            tvUsername.setText("@" + post.getUser().getUsername());
+            mTvDescription.setText(post.getDescription());
+            mTvUsername.setText(itemView.getResources().getString(R.string.ampersand) + post.getUser().getUsername());
 
             final int[] ran = {(int) (Math.random() * 1000000) + 2};
-            tvLikeCount.setText(ran[0] + " likes");
+            mTvLikeCount.setText(ran[0] + itemView.getResources().getString(R.string.likes));
 
 
             TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
-            tvCreatedAt.setText(timeAgo.calculateTimeAgo());
+            mTvCreatedAt.setText(timeAgo.calculateTimeAgo());
 
             ParseFile image = post.getImage();
-            Glide.with(context).load(image.getUrl()).into(ivImage);
+            Glide.with(mContext).load(image.getUrl()).into(mIvImage);
 
-            Glide.with(context)
+            Glide.with(mContext)
                     .load(post.getProfile().getUrl())
                     .circleCrop()
-                    .into(ivProfileImage);
+                    .into(mIvProfileImage);
 
-            ibLike.setOnClickListener(new View.OnClickListener() {
+            mIbLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ran[0]++;
-                    tvLikeCount.setText(ran[0] + " likes");
+                    mTvLikeCount.setText(ran[0] + itemView.getResources().getString(R.string.likes));
                 }
             });
 

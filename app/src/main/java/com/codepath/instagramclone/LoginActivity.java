@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,16 +15,15 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import org.parceler.Parcels;
-
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String TAG = "LoginActivity";
-    private EditText etUsername;
-    private EditText etPassword;
-    private Button btnLogin;
-    private Button btnSignUp;
+    private static final String TAG = "LoginActivity";
+
+    private EditText mEtUsername;
+    private EditText mEtPassword;
+    private Button mBtnLogin;
+    private Button mBtnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             name = getIntent().getStringExtra("new account");
             if (name != null) {
                 // tells user that an account has been made
-                Toast.makeText(this, "account created!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.new_account_message), Toast.LENGTH_LONG).show();
             }
             Log.i(TAG, "onCreate try: recentlyCreated status " + name);
 
@@ -49,25 +47,24 @@ public class LoginActivity extends AppCompatActivity {
             Log.i(TAG, "onCreate catch: recentlyCreated status " + name);
         }
 
-
         if (ParseUser.getCurrentUser() != null && name == null) {
             goMainActivity();
         }
 
-        etUsername = binding.etUsername;
-        etPassword = binding.etPassword;
-        btnLogin = binding.btnLogin;
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        mEtUsername = binding.etUsername;
+        mEtPassword = binding.etPassword;
+        mBtnLogin = binding.btnLogin;
+        mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onClick login button");
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
+                String username = mEtUsername.getText().toString();
+                String password = mEtPassword.getText().toString();
                 loginUser(username, password);
             }
         });
-        btnSignUp = binding.btnSignUp;
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+        mBtnSignUp = binding.btnSignUp;
+        mBtnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onClick sign up button");
@@ -81,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, SignUpActivity.class);
         startActivity(i);
         finish();
-
     }
 
     private void loginUser(String username, String password) {
@@ -92,10 +88,10 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue with login", e);
-                    Toast.makeText(LoginActivity.this, "Issue with login", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.error_message), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // navigate to main activity if user has properly signed in
+                // navigates to main activity if user has properly signed in
                 goMainActivity();
             }
         });

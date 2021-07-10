@@ -19,10 +19,10 @@ import static android.content.ContentValues.TAG;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText etUsername;
-    private EditText etPassword;
-    private EditText etConfirmPass;
-    private Button btnSignUp;
+    private EditText mEtUsername;
+    private EditText mEtPassword;
+    private EditText mEtConfirmPass;
+    private Button mBtnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +32,20 @@ public class SignUpActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        etUsername = binding.etUsername;
-        etPassword = binding.etPassword;
-        etConfirmPass = binding.etConfirmPass;
-        btnSignUp = binding.btnSignUp;
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+        mEtUsername = binding.etUsername;
+        mEtPassword = binding.etPassword;
+        mEtConfirmPass = binding.etConfirmPass;
+        mBtnSignUp = binding.btnSignUp;
+        mBtnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onClick login button");
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                String passwordConfirm = etConfirmPass.getText().toString();
+                String username = mEtUsername.getText().toString();
+                String password = mEtPassword.getText().toString();
+                String passwordConfirm = mEtConfirmPass.getText().toString();
 
                 if (!password.equals(passwordConfirm)) {
-                    Toast.makeText(SignUpActivity.this, "passwords must match", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, getResources().getString(R.string.error_message), Toast.LENGTH_SHORT).show();
                 } else {
                     ParseUser user = new ParseUser();
                     user.setUsername(username);
@@ -55,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
-                                // Let use app now, redirect to log in page
+                                // Redirects to log in page
                                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                                 intent.putExtra("new account", "true");
                                 startActivity(intent);
@@ -69,8 +69,6 @@ public class SignUpActivity extends AppCompatActivity {
                     });
 
                 }
-
-
             }
         });
 

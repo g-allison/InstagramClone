@@ -3,7 +3,6 @@ package com.codepath.instagramclone;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,21 +13,17 @@ import com.codepath.instagramclone.databinding.ActivityPostBinding;
 
 import org.parceler.Parcels;
 
-import java.util.Date;
 
 public class PostActivity extends AppCompatActivity {
 
-    public static final String TAG = "PostActivity";
-
-    private TextView tvUsername;
-    private TextView tvDescription;
-    private TextView tvCreatedAt;
-    private TextView tvLikeCount;
-    private ImageView ivImage;
-    private ImageView ivProfileImage;
-    private ImageButton ibLike;
-
-    private Post post;
+    private TextView mTvUsername;
+    private TextView mTvDescription;
+    private TextView mTvCreatedAt;
+    private TextView mTvLikeCount;
+    private ImageView mIvImage;
+    private ImageView mIvProfileImage;
+    private ImageButton mIbLike;
+    private Post mPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,41 +33,41 @@ public class PostActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("post"));
+        mPost = (Post) Parcels.unwrap(getIntent().getParcelableExtra("post"));
 
-        tvUsername = binding.tvUsername;
-        tvDescription = binding.tvDescription;
-        tvCreatedAt = binding.tvCreatedAt;
-        ivImage = binding.ivImage;
-        ivProfileImage = binding.ivProfileImage;
-        tvLikeCount = binding.tvLikeCount;
-        ibLike = binding.ibLike;
+        mTvUsername = binding.tvUsername;
+        mTvDescription = binding.tvDescription;
+        mTvCreatedAt = binding.tvCreatedAt;
+        mIvImage = binding.ivImage;
+        mIvProfileImage = binding.ivProfileImage;
+        mTvLikeCount = binding.tvLikeCount;
+        mIbLike = binding.ibLike;
 
-        tvUsername.setText("@" + post.getUser().getUsername());
+        mTvUsername.setText(getResources().getString(R.string.ampersand) + mPost.getUser().getUsername());
 
         final int[] ran = {(int) (Math.random() * 1000000) + 2};
-        tvLikeCount.setText(ran[0] + " likes");
+        mTvLikeCount.setText(ran[0] + getResources().getString(R.string.likes));
 
-        tvDescription.setText(post.getDescription());
+        mTvDescription.setText(mPost.getDescription());
 
-        TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
-        tvCreatedAt.setText(timeAgo.calculateTimeAgo());
+        TimeAgo timeAgo = new TimeAgo(mPost.getCreatedAt());
+        mTvCreatedAt.setText(timeAgo.calculateTimeAgo());
 
         Glide.with(this)
-                .load(post.getImage().getUrl())
+                .load(mPost.getImage().getUrl())
                 .centerCrop()
-                .into(ivImage);
+                .into(mIvImage);
 
         Glide.with(this)
-                .load(post.getProfile().getUrl())
+                .load(mPost.getProfile().getUrl())
                 .circleCrop()
-                .into(ivProfileImage);
+                .into(mIvProfileImage);
 
-        ibLike.setOnClickListener(new View.OnClickListener() {
+        mIbLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ran[0]++;
-                tvLikeCount.setText(ran[0] + " likes");
+                mTvLikeCount.setText(ran[0] + getResources().getString(R.string.likes));
             }
         });
     }

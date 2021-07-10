@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
@@ -41,15 +40,15 @@ import java.io.File;
  */
 public class ComposeFragment extends Fragment {
 
-    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private static final String TAG = "ComposeFragment";
+    private static final String photoFileName = "photo.jpg";
 
-    private EditText etDescription;
-    private Button btnCaptureImage;
-    private ImageView ivPostImage;
-    private Button btnSubmit;
-    private File photoFile;
-    private String photoFileName = "photo.jpg";
+    private EditText mEtDescription;
+    private Button mBtnCaptureImage;
+    private ImageView mIvPostImage;
+    private Button mBtnSubmit;
+    private File mPhotoFile;
 
     public ComposeFragment() {
         // Required empty public constructor
@@ -59,7 +58,6 @@ public class ComposeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_compose, container, false);
     }
 
@@ -67,12 +65,12 @@ public class ComposeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        etDescription = view.findViewById(R.id.etDescription);
-        btnCaptureImage = view.findViewById(R.id.btnCaptureImage);
-        ivPostImage = view.findViewById(R.id.ivPostImage);
-        btnSubmit = view.findViewById(R.id.btnSubmit);
+        mEtDescription = view.findViewById(R.id.etDescription);
+        mBtnCaptureImage = view.findViewById(R.id.btnCaptureImage);
+        mIvPostImage = view.findViewById(R.id.ivPostImage);
+        mBtnSubmit = view.findViewById(R.id.btnSubmit);
 
-        btnCaptureImage.setOnClickListener(new View.OnClickListener() {
+        mBtnCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchCamera();
@@ -80,22 +78,22 @@ public class ComposeFragment extends Fragment {
         });
 
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String description = etDescription.getText().toString();
+                String description = mEtDescription.getText().toString();
                 if (description.isEmpty()) {
-                    Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.error_message), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (photoFile == null) {
-                    Toast.makeText(getContext(), "Must upload image", Toast.LENGTH_SHORT).show();
+                if (mPhotoFile == null) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.error_message), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 ParseUser currentUser = ParseUser.getCurrentUser();
-                savePost(description, currentUser, photoFile);
+                savePost(description, currentUser, mPhotoFile);
             }
         });
 
@@ -105,16 +103,13 @@ public class ComposeFragment extends Fragment {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
-        photoFile = getPhotoFileUri(photoFileName);
+        mPhotoFile = getPhotoFileUri(photoFileName);
 
         // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", mPhotoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
+        // As long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -127,37 +122,33 @@ public class ComposeFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri takenPhotoUri = Uri.fromFile(getPhotoFileUri(photoFileName));
-                // by this point we have the camera photo on disk
+                // Now have the camera photo on disk
                 Bitmap rawTakenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-                // See BitmapScaler.java: https://gist.github.com/nesquena/3885707fd3773c09f1bb
                 Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, 100);
 
-                // Configure byte output stream
+                // Configures byte output stream
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                // Compress the image further
+                // Compresses the image further
                 resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
 
-                // Load the taken image into a preview
-                ivPostImage.setImageBitmap(resizedBitmap);
+                // Loads the taken image into a preview
+                mIvPostImage.setImageBitmap(resizedBitmap);
             } else { // Result was a failure
-                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     // Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
-        // Create the storage directory if it does not exist
+        // Creates the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(TAG, "failed to create directory");
         }
 
-        // Return the file target for the photo based on filename
+        // Returns the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
 
     }
@@ -173,11 +164,11 @@ public class ComposeFragment extends Fragment {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error while saving", e);
-                    Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
                 Log.i(TAG, "Post save was successful!");
-                etDescription.setText("");
-                ivPostImage.setImageResource(0);
+                mEtDescription.setText("");
+                mIvPostImage.setImageResource(0);
                 ((MainActivity)getActivity()).postTransition();
             }
         });

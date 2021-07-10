@@ -5,44 +5,40 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.codepath.instagramclone.GridAdapter;
 import com.codepath.instagramclone.Post;
 import com.codepath.instagramclone.R;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UserProfileFragment extends ProfileFragment {
-    ParseUser user;
     private static final String TAG = "UserProfileFragment";
-    private TextView tvUsername;
-    private TextView tvName;
-//    private RecyclerView rvPosts;
+
+    private TextView mTvUsername;
+    private TextView mTvName;
+    private ImageView mIvProfileImage;
+    private ParseUser mUser;
+
 
     public UserProfileFragment() {
         // Required empty public constructor
     }
 
     public UserProfileFragment(ParseUser user) {
-        this.user = user;
+        this.mUser = user;
     }
 
     @Override
@@ -50,20 +46,19 @@ public class UserProfileFragment extends ProfileFragment {
         Log.d(TAG, "onViewCreated: ");
         super.onViewCreated(view, savedInstanceState);
 
+        mTvName = view.findViewById(R.id.tvName);
+        mTvUsername = view.findViewById(R.id.tvUsername);
 
-        tvName = view.findViewById(R.id.tvName);
-        tvUsername = view.findViewById(R.id.tvUsername);
+        mTvName.setText(mUser.getString("name"));
+        mTvUsername.setText(mUser.getUsername());
 
-        tvName.setText(user.getString("name"));
-        tvUsername.setText(user.getUsername());
+        Log.d(TAG, "Username: " + mUser.getUsername());
 
-        Log.d(TAG, "Username: " + user.getUsername());
-
-        ivProfileImage = view.findViewById(R.id.ivProfileImage);
+        mIvProfileImage = view.findViewById(R.id.ivProfileImage);
         Glide.with(view.getContext())
-                .load(user.getParseFile("profilePicture").getUrl())
+                .load(mUser.getParseFile("profilePicture").getUrl())
                 .circleCrop()
-                .into(ivProfileImage);
+                .into(mIvProfileImage);
 
     }
 
@@ -73,7 +68,7 @@ public class UserProfileFragment extends ProfileFragment {
         query.include(Post.KEY_USER);
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_KEY);
-        query.whereEqualTo(Post.KEY_USER, user);
+        query.whereEqualTo(Post.KEY_USER, mUser);
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
@@ -86,12 +81,9 @@ public class UserProfileFragment extends ProfileFragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                allPosts.addAll(posts);
-                adapter.notifyDataSetChanged();
+                mAllPosts.addAll(posts);
+                mAdapter.notifyDataSetChanged();
             }
         });
-
-
-
     }
 }

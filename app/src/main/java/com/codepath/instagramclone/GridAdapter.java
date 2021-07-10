@@ -15,17 +15,17 @@ import com.parse.ParseFile;
 import java.util.List;
 
 
-
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
-    private Context context;
-    private List<Post> posts;
+
+    private Context mContext;
+    private List<Post> mPosts;
     private OnPostListener mOnPostListener;
     private LayoutInflater mInflater;
 
-    public GridAdapter(Context context, List<Post> posts, OnPostListener onPostListener) {
-        this.mInflater = LayoutInflater.from(context);
-        this.context = context;
-        this.posts = posts;
+    public GridAdapter(Context mContext, List<Post> posts, OnPostListener onPostListener) {
+        this.mInflater = LayoutInflater.from(mContext);
+        this.mContext = mContext;
+        this.mPosts = posts;
         this.mOnPostListener = onPostListener;
     }
 
@@ -38,53 +38,46 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Post post = posts.get(position);
+        Post post = mPosts.get(position);
         holder.bind(post);
     }
 
     @Override
     public int getItemCount() {
-        return posts.size();
+        return mPosts.size();
     }
 
     // Clean all elements of the recycler
     public void clear() {
-        posts.clear();
+        mPosts.clear();
         notifyDataSetChanged();
-    }
-
-    public List<Post> getPosts() {
-        return posts;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView ivGrid;
+        private ImageView mIvGrid;
+        private OnPostListener mOnPostListener;
 
-        OnPostListener onPostListener;
-
-        public ViewHolder(@NonNull View itemView, OnPostListener onPostListener) {
+        public ViewHolder(@NonNull View itemView, OnPostListener mOnPostListener) {
             super(itemView);
-            ivGrid = itemView.findViewById(R.id.ivGrid);
+            mIvGrid = itemView.findViewById(R.id.ivGrid);
 
             itemView.setOnClickListener(this);
-            this.onPostListener = onPostListener;
+            this.mOnPostListener = mOnPostListener;
         }
 
         public void bind(Post post) {
-            // Bind the post data to the view elements
-
+            // Binding the post data to the view elements
             ParseFile image = post.getImage();
-            Glide.with(context)
+            Glide.with(mContext)
                     .load(image.getUrl())
                     .centerCrop()
-                    .into(ivGrid);
-
+                    .into(mIvGrid);
         }
 
         @Override
         public void onClick(View v) {
-            onPostListener.onPostClick(getAdapterPosition());
+            mOnPostListener.onPostClick(getAdapterPosition());
         }
     }
 
