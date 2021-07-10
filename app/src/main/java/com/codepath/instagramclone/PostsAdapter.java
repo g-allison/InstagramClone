@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,6 +65,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvLikeCount;
         private ImageView ivProfileImage;
         private ImageView ivImage;
+        private ImageButton ibLike;
         private RelativeLayout rlContainer;
 
         OnPostListener onPostListener;
@@ -76,6 +78,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvLikeCount = itemView.findViewById(R.id.tvLikeCount);
+            ibLike = itemView.findViewById(R.id.ibLike);
             rlContainer = itemView.findViewById(R.id.rlContainer);
             this.onPostListener = onPostListener;
         }
@@ -92,7 +95,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             // Bind the post data to the view elements
             tvDescription.setText(post.getDescription());
             tvUsername.setText("@" + post.getUser().getUsername());
-            tvLikeCount.setText(((int)(Math.random() * 1000000) + 2) + " likes");
+
+            final int[] ran = {(int) (Math.random() * 1000000) + 2};
+            tvLikeCount.setText(ran[0] + " likes");
 
 
             TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
@@ -105,6 +110,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     .load(post.getProfile().getUrl())
                     .circleCrop()
                     .into(ivProfileImage);
+
+            ibLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ran[0]++;
+                    tvLikeCount.setText(ran[0] + " likes");
+                }
+            });
 
         }
     }

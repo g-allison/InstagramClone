@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class PostActivity extends AppCompatActivity {
     private TextView tvLikeCount;
     private ImageView ivImage;
     private ImageView ivProfileImage;
+    private ImageButton ibLike;
 
     private Post post;
 
@@ -44,10 +46,13 @@ public class PostActivity extends AppCompatActivity {
         ivImage = binding.ivImage;
         ivProfileImage = binding.ivProfileImage;
         tvLikeCount = binding.tvLikeCount;
-
-        tvLikeCount.setText(((int)(Math.random() * 1000000) + 2) + " likes");
+        ibLike = binding.ibLike;
 
         tvUsername.setText("@" + post.getUser().getUsername());
+
+        final int[] ran = {(int) (Math.random() * 1000000) + 2};
+        tvLikeCount.setText(ran[0] + " likes");
+
         tvDescription.setText(post.getDescription());
 
         TimeAgo timeAgo = new TimeAgo(post.getCreatedAt());
@@ -62,5 +67,13 @@ public class PostActivity extends AppCompatActivity {
                 .load(post.getProfile().getUrl())
                 .circleCrop()
                 .into(ivProfileImage);
+
+        ibLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ran[0]++;
+                tvLikeCount.setText(ran[0] + " likes");
+            }
+        });
     }
 }
