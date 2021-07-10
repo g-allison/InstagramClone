@@ -48,6 +48,7 @@ public class PostActivity extends AppCompatActivity {
         final int[] ran = {(int) (Math.random() * 1000000) + 2};
         mTvLikeCount.setText(ran[0] + getResources().getString(R.string.likes));
 
+
         mTvDescription.setText(mPost.getDescription());
 
         TimeAgo timeAgo = new TimeAgo(mPost.getCreatedAt());

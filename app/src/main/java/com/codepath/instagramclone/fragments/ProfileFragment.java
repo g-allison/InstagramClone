@@ -92,13 +92,15 @@ public class ProfileFragment extends Fragment implements GridAdapter.OnPostListe
                 mAdapter.notifyDataSetChanged();
                 Log.d(TAG, "done: allPosts " + mAllPosts);
                 Log.d(TAG, "username: " + mAllPosts.get(0).getUser().getUsername());
+                Log.d(TAG, "name: " + mAllPosts.get(0).getName());
 
-                mTvName = view.findViewById(R.id.tvName);
-                mTvName.setText(mAllPosts.get(0).getName());
 
                 Post post = mAllPosts.get(0);
                 mTvUsername = view.findViewById(R.id.tvUsername);
                 mTvUsername.setText(getResources().getString(R.string.ampersand) + post.getUser().getUsername());
+
+                mTvName = view.findViewById(R.id.tvName);
+                mTvName.setText(post.getName());
 
                 mIvProfileImage = view.findViewById(R.id.ivProfileImage);
                 Glide.with(view.getContext())

@@ -112,6 +112,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 public void onClick(View v) {
                     ran[0]++;
                     mTvLikeCount.setText(ran[0] + itemView.getResources().getString(R.string.likes));
+
                 }
             });
 
